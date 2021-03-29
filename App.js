@@ -14,6 +14,12 @@ export default function App() {
     setTask(null);
   }
 
+  const completeTask = (index) => {
+    let itemsCopy = [...taskItems];
+    itemsCopy.splice(index, 1);   //will remove 1 item from the array
+    setTaskItems(itemsCopy);
+  }
+
   return (
     <View style={styles.container}>
         {/*Todays Tasks*/}
@@ -25,11 +31,15 @@ export default function App() {
               
              </View>
              <ScrollView>
-              {
+              { 
               taskItems.map((item, index) => {
-               return <Task 
-               key = {index}
+               return (
+               <TouchableOpacity key = {index} onPress = {() => completeTask(index) }>
+               <Task 
+               
                text = {item} />
+               </TouchableOpacity>
+               )
               } )
             }
             </ScrollView>
