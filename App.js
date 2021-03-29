@@ -1,9 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View,TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View,TouchableOpacity, ScrollView, Keyboard } from 'react-native';
 import Task from './components/Task';
 
 export default function App() {
+
+  const [task , setTask] = useState();
+  const [taskItems, setTaskItems] = useState ([]);
+
+  const handleAddTask = () => {
+    Keyboard.dismiss();
+    setTaskItems([...taskItems, task])
+    setTask(null);
+  }
+
   return (
     <View style={styles.container}>
         {/*Todays Tasks*/}
@@ -12,22 +22,35 @@ export default function App() {
                Today's tasks
              </Text>
              <View style = {styles.items}>
-
+              
              </View>
-
-             <Task text = {'hi there'} />
-             <Task  text = {"yooo"} />
-
+             <ScrollView>
+              {
+              taskItems.map((item, index) => {
+               return <Task 
+               key = {index}
+               text = {item} />
+              } )
+            }
+            </ScrollView>
           </View>
           <KeyboardAvoidingView 
-          behavior = {Platform.OS === "ios" ? "padding" : "padding"  } 
-          style = {styles.writeTaskWrapper}   
+           
+          style = {styles.writeTaskWrapper} 
+          behavior = {Platform.OS === "ios" ? "padding" : "height"  } 
+          enabled
+          keyboardVerticalOffset = {10}
           >
+           
             <TextInput style = {styles.input}
                        placeholder = {'Write a task'}
+                       onChangeText = {text => setTask(text)} //grab whatever the text is and setTask to be that text.
+                       value = {task}
              />
-
-            <TouchableOpacity>
+            
+            <TouchableOpacity 
+            onPress = { () => handleAddTask()}  // when button is pressed calls the function handleAddTask
+            >
              <View style = {styles.addWrapper } >
                <Text style = {styles.addText} > + </Text>
 
@@ -35,7 +58,7 @@ export default function App() {
 
             </TouchableOpacity>
           
-
+           
 
           </KeyboardAvoidingView>
 
